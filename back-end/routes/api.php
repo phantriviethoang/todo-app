@@ -15,9 +15,9 @@ Route::get('/todos', [TodoController::class, 'index']);
 Route::post('/todos', [TodoController::class, 'store']);
 
 // update todo
-Route::patch('/todos/${todo}', [TodoController::class, 'update']);
+Route::patch('/todos/{todo}', [TodoController::class, 'update']);
 
 // delete todo
-Route::delete('/todos/${todo}', [TodoController::class, 'destroy']);
+Route::delete('/todos/{todo}', [TodoController::class, 'destroy']);
 
 // Route::apiResource('todos', TodoController::class);

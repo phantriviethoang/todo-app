@@ -20,27 +20,21 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
+        // validate
         $fields = $request->validate(
             [
                 'title' => 'required',
-                'completed' => 'boolean'
             ],
             [
                 'title.required' => 'Title không được để trống'
             ]
         );
 
+        // action
         $todos = Todo::create($fields);
 
+        // return
         return response()->json($todos, 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Todo $todo)
-    {
-        //
     }
 
     /**
@@ -48,7 +42,17 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo)
     {
-        //
+        // validate
+        $fields = $request->validate([
+            'title' => 'required',
+            'completed' => 'required'
+        ]);
+
+        // action
+        $todo->update($fields);
+
+        // return
+        return response()->json($todo);
     }
 
     /**
