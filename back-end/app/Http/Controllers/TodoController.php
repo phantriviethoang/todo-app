@@ -12,7 +12,7 @@ class TodoController extends Controller
      */
     public function index()
     {
-        return Todo::all();
+        return Todo::latest()->get();
     }
 
     /**
@@ -40,10 +40,10 @@ class TodoController extends Controller
     /**
      * Display the specified resource.
      */
-    // public function show(Todo $todo)
-    // {
-    //     return $todo;
-    // }
+    public function show(Todo $todo)
+    {
+        return $todo;
+    }
 
     /**
      * Update the specified resource in storage.
