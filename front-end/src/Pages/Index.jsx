@@ -55,18 +55,26 @@ export default function Todos() {
 		});
 	}
 
-	function toggle(id) {
-		setTodos((prev) =>
-			prev.map((todo) =>
-				todo.id === id
-					? {
-							...todo,
-							completed: !todo.completed,
-						}
-					: todo,
-			),
-		);
-	}
+async function toggle(id) {
+	const todo = todos.find((t) => t.id === id);
+
+	const res = await fetch(`/api/todos/${id}`, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+		body: JSON.stringify({
+			completed: !todo.completed,
+		}),
+	});
+
+	if (!res.ok) return;
+
+	const updated = await res.json();
+
+	setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
+}
 
 	return (
 		<div className="w-full">

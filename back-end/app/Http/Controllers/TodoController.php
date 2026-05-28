@@ -52,8 +52,8 @@ class TodoController extends Controller
     {
         // validate
         $fields = $request->validate([
-            'title' => 'required',
-            'completed' => 'required'
+            'title' => 'sometimes|required',
+            'completed' => 'sometimes|boolean'
         ]);
 
         // action
