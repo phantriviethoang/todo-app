@@ -4,7 +4,7 @@ export default function Todos() {
 	const [todos, setTodos] = useState([]);
 	const [formData, setFormData] = useState({
 		title: "",
-		completed: false,
+		completed: null,
 	});
 
 	const [errors, setErrors] = useState({});
@@ -103,17 +103,20 @@ export default function Todos() {
 						key={todo.id}
 						className="flex items-center justify-between border py-1 px-2 border-gray-700 rounded"
 					>
-						<div className="flex-1">{todo.title}</div>
+						<div
+							className={`flex-1 ${todo.completed ? "line-through" : ""}`}
+						>
+							{todo.title}
+						</div>
+
 						<div>
-							{todo.completed ? (
-								<button className="btn btn-neutral btn-sm">
-									completed
-								</button>
-							) : (
-								<button className="btn btn-primary btn-sm">
-									mark done
-								</button>
-							)}
+							<div
+								className={`btn btn-neutral btn-sm ${
+									todo.completed ? "bg-red-500" : ""
+								}`}
+							>
+								{todo.completed ? "completed" : "not completed"}
+							</div>
 						</div>
 
 						<div>
