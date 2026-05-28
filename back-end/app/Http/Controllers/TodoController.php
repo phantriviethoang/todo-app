@@ -20,7 +20,19 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fields = $request->validate(
+            [
+                'title' => 'required',
+                'completed' => 'boolean'
+            ],
+            [
+                'title.required' => 'Title không được để trống'
+            ]
+        );
+
+        $todos = Todo::create($fields);
+
+        return response()->json($todos, 201);
     }
 
     /**
