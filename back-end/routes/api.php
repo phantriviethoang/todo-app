@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 // get all todos
 Route::get('/todos', [TodoController::class, 'index']);
 
+// get single todo
+// Route::get('/todos/{todo}', [TodoController::class, 'show']);
+
 // create todo
 Route::post('/todos', [TodoController::class, 'store']);
 

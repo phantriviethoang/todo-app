@@ -25,9 +25,9 @@ class TodoController extends Controller
             [
                 'title' => 'required',
             ],
-            [
-                'title.required' => 'Title không được để trống'
-            ]
+            // [
+            //     'title.required' => 'Title không được để trống'
+            // ]
         );
 
         // action
@@ -36,6 +36,14 @@ class TodoController extends Controller
         // return
         return response()->json($todos, 201);
     }
+
+    /**
+     * Display the specified resource.
+     */
+    // public function show(Todo $todo)
+    // {
+    //     return $todo;
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -60,6 +68,8 @@ class TodoController extends Controller
      */
     public function destroy(Todo $todo)
     {
-        //
+        $todo->delete();
+
+        return ["message" => "Todo deleted successfully"];
     }
 }
