@@ -9,6 +9,9 @@ export default function Todos() {
 
 	const [errors, setErrors] = useState({});
 
+	const [editingId, setEditingId] = useState(null);
+	const [editValue, setEditValue] = useState("");
+
 	async function getTodos() {
 		const res = await fetch("/api/todos");
 
@@ -55,26 +58,47 @@ export default function Todos() {
 		});
 	}
 
-async function toggle(id) {
-	const todo = todos.find((t) => t.id === id);
+	async function toggle(id) {
+		const todo = todos.find((t) => t.id === id);
 
-	const res = await fetch(`/api/todos/${id}`, {
-		method: "PATCH",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json",
-		},
-		body: JSON.stringify({
-			completed: !todo.completed,
-		}),
-	});
+		const res = await fetch(`/api/todos/${id}`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+			body: JSON.stringify({
+				completed: !todo.completed,
+			}),
+		});
 
-	if (!res.ok) return;
+		if (!res.ok) return;
 
-	const updated = await res.json();
+		const updated = await res.json();
 
-	setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
-}
+		setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
+	}
+
+	async function saveEdit(id) {
+		const res = await fetch(`/api/todos/${id}`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+			body: JSON.stringify({
+				title: editValue,
+			}),
+		});
+
+		if (!res.ok) return;
+
+		const updated = await res.json();
+
+		setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
+
+		setEditingId(null);
+	}
 
 	return (
 		<div className="w-full">
@@ -124,10 +148,34 @@ async function toggle(id) {
 						key={todo.id}
 						className="flex items-center justify-between border py-1 px-2 border-gray-700 rounded"
 					>
-						<div
-							className={`flex-1 ${todo.completed ? "line-through" : ""}`}
-						>
-							{todo.title}
+						<div className="flex-1">
+							{editingId === todo.id ? (
+								<input
+									className="input input-lg focus:outline-none w-full"
+									value={editValue}
+									autoFocus
+									onChange={(e) => {
+										setEditValue(e.target.value);
+									}}
+									onBlur={() => saveEdit(todo.id)}
+									onKeyDown={(e) => {
+										if (e.key === "Enter")
+											saveEdit(todo.id);
+									}}
+								/>
+							) : (
+								<div
+									className={
+										todo.completed ? "line-through" : ""
+									}
+									onClick={() => {
+										setEditingId(todo.id);
+										setEditValue(todo.title);
+									}}
+								>
+									{todo.title}
+								</div>
+							)}
 						</div>
 
 						<div>
