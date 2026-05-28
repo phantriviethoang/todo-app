@@ -55,6 +55,19 @@ export default function Todos() {
 		});
 	}
 
+	function toggle(id) {
+		setTodos((prev) =>
+			prev.map((todo) =>
+				todo.id === id
+					? {
+							...todo,
+							completed: !todo.completed,
+						}
+					: todo,
+			),
+		);
+	}
+
 	return (
 		<div className="w-full">
 			<h1 className="text-4xl mb-5 text-gray-300">All Todos</h1>
@@ -110,13 +123,14 @@ export default function Todos() {
 						</div>
 
 						<div>
-							<div
+							<button
+								onClick={() => toggle(todo.id)}
 								className={`btn btn-neutral btn-sm ${
-									todo.completed ? "bg-red-500" : ""
+									todo.completed ? "bg-zinc-500" : ""
 								}`}
 							>
 								{todo.completed ? "completed" : "not completed"}
-							</div>
+							</button>
 						</div>
 
 						<div>
