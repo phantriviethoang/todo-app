@@ -100,6 +100,19 @@ export default function Todos() {
 		setEditingId(null);
 	}
 
+	async function destroy(id) {
+		const res = await fetch(`/api/todos/${id}`, {
+			method: "DELETE",
+			headers: {
+				Accept: "application/json",
+			},
+		});
+
+		if (!res.ok) return;
+
+		setTodos((prev) => prev.filter((todo) => todo.id !== id));
+	}
+
 	return (
 		<div className="w-full">
 			<h1 className="text-4xl mb-5 text-gray-300">All Todos</h1>
@@ -190,7 +203,10 @@ export default function Todos() {
 						</div>
 
 						<div>
-							<button className="text-sm ml-3 btn btn-error text-white btn-sm">
+							<button
+								className="text-sm ml-3 btn btn-error text-white btn-sm"
+								onClick={() => destroy(todo.id)}
+							>
 								Delete
 							</button>
 						</div>
