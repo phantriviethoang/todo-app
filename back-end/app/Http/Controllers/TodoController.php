@@ -23,7 +23,7 @@ class TodoController extends Controller
         // validate
         $fields = $request->validate(
             [
-                'title' => 'required',
+                'title' => 'required|min:8',
             ],
             // [
             //     'title.required' => 'Title không được để trống'

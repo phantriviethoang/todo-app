@@ -7,6 +7,8 @@ export default function Todos() {
 		completed: false,
 	});
 
+	const [errors, setErrors] = useState({});
+
 	async function getTodos() {
 		const res = await fetch("/api/todos");
 
@@ -24,18 +26,29 @@ export default function Todos() {
 
 		const res = await fetch("/api/todos", {
 			method: "post",
+
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
 			},
+
 			body: JSON.stringify(formData),
 		});
 
 		const data = await res.json();
 
+		// validation fail
+		if (!res.ok) {
+			setErrors(data.errors);
+			return;
+		}
+
 		setTodos([data, ...todos]);
 
-        // clear input after submit
+		// clear errors
+		setErrors({});
+
+		// clear input after submit
 		setFormData({
 			title: "",
 			completed: false,
@@ -57,23 +70,34 @@ export default function Todos() {
 					Title
 				</label>
 
-				<div className="flex items-center space-x-2 mx-6 border-b border-white/25">
-					<input
-						type="text"
-						className="input mb-5 py-8 flex-1 w-full focus:outline-none"
-						placeholder="eg: football"
-						onChange={(e) => {
-							setFormData({ ...formData, title: e.target.value });
-						}}
-						value={formData.title}
-					/>
-					<button className="btn btn-secondary mb-5">
-						Add new todo
-					</button>
+				<div>
+					<div className="flex items-center space-x-2 mx-6">
+						<input
+							type="text"
+							className="input mb-5 py-8 flex-1 w-full focus:outline-none"
+							placeholder="eg: football"
+							onChange={(e) => {
+								setFormData({
+									...formData,
+									title: e.target.value,
+								});
+							}}
+							value={formData.title}
+						/>
+						<button className="btn btn-secondary mb-5">
+							Add new todo
+						</button>
+					</div>
+
+					<div className="mx-6">
+						{errors.title && (
+							<p className="text-error">{errors.title[0]}</p>
+						)}
+					</div>
 				</div>
 			</form>
 
-			<div className="justify-center flex flex-col space-y-10 text-xl mt-3">
+			<div className="justify-center flex flex-col space-y-10 text-xl mt-3 pt-2 border-t border-white/25">
 				{todos.map((todo) => (
 					<div
 						key={todo.id}
@@ -82,16 +106,18 @@ export default function Todos() {
 						<div className="flex-1">{todo.title}</div>
 						<div>
 							{todo.completed ? (
-								<button className="btn">completed</button>
+								<button className="btn btn-neutral btn-sm">
+									completed
+								</button>
 							) : (
-								<button className="btn btn-soft">
-									uncompleted
+								<button className="btn btn-primary btn-sm">
+									mark done
 								</button>
 							)}
 						</div>
 
 						<div>
-							<button className="text-sm ml-3 btn btn-error text-white">
+							<button className="text-sm ml-3 btn btn-error text-white btn-sm">
 								Delete
 							</button>
 						</div>
